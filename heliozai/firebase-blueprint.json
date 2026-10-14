@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile, voice costume settings, and preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "activeCostumeId": { "type": "string" },
+        "selectedLanguage": { "type": "string" },
+        "morningCallEnabled": { "type": "boolean" },
+        "eveningCallEnabled": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "TaskItem": {
+      "title": "TaskItem",
+      "description": "User growth tasks, to-dos, and reminder items",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "time": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "enum": ["calls", "workout", "education", "design", "business", "other"] },
+        "enabled": { "type": "boolean" },
+        "completed": { "type": "boolean" },
+        "isToday": { "type": "boolean" },
+        "syncedCalendarEventId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title"]
+    },
+    "GrowthNote": {
+      "title": "GrowthNote",
+      "description": "Personal wisdom notes, Gita reflections, and Keep memos",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "content": { "type": "string", "maxLength": 5000 },
+        "tags": { "type": "array" },
+        "color": { "type": "string" },
+        "pinned": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "content"]
+    },
+    "SheetExport": {
+      "title": "SheetExport",
+      "description": "Tracked Google Sheets created or synced by the user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "spreadsheetId": { "type": "string" },
+        "title": { "type": "string" },
+        "spreadsheetUrl": { "type": "string" },
+        "lastSyncedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "spreadsheetId"]
+    },
+    "HabitItem": {
+      "title": "HabitItem",
+      "description": "Personal growth habit item with tracking history and streaks",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string" },
+        "targetDaysPerWeek": { "type": "number" },
+        "currentStreak": { "type": "number" },
+        "longestStreak": { "type": "number" },
+        "color": { "type": "string" }
+      },
+      "required": ["userId", "title"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document identified by user UID"
+    },
+    "/users/{userId}/tasks/{taskId}": {
+      "schema": "TaskItem",
+      "description": "Subcollection of tasks and reminders owned by the user"
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": "GrowthNote",
+      "description": "Subcollection of user growth notes and Keep memos"
+    },
+    "/users/{userId}/sheets/{sheetId}": {
+      "schema": "SheetExport",
+      "description": "Subcollection of Google Sheets integrations owned by the user"
+    },
+    "/users/{userId}/habits/{habitId}": {
+      "schema": "HabitItem",
+      "description": "Subcollection of habit tracking items and streak data"
+    }
+  }
+}

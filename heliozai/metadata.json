@@ -1,0 +1,6 @@
+{
+  "name": "HELIOZ AI - Personal Growth & Costume Voice Changer",
+  "description": "Your personal growth companion featuring daily call schedules, Bhagavad Gita guidance mode, task reminders, and a real-time costume voice changer with audio DSP effects.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

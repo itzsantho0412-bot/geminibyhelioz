@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User profile document
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isValidId(userId);
+
+      // Tasks subcollection
+      match /tasks/{taskId} {
+        allow read, write: if isOwner(userId) && isValidId(taskId);
+      }
+
+      // Notes & Keep memos subcollection
+      match /notes/{noteId} {
+        allow read, write: if isOwner(userId) && isValidId(noteId);
+      }
+
+      // Google Sheets sync records
+      match /sheets/{sheetId} {
+        allow read, write: if isOwner(userId) && isValidId(sheetId);
+      }
+
+      // Habit tracking and streak subcollection
+      match /habits/{habitId} {
+        allow read, write: if isOwner(userId) && isValidId(habitId);
+      }
+    }
+  }
+}
